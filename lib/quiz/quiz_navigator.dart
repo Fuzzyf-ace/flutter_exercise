@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_exercise/quiz/data/questions.dart';
 import 'package:flutter_exercise/quiz/questions_screen.dart';
 import 'package:flutter_exercise/quiz/start_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -11,16 +12,19 @@ final GoRouter _router = GoRouter(
         return const StartScreen();
       },
       routes: <RouteBase>[
-        GoRoute(
-          path: 'quiz',
-          builder: (BuildContext context, GoRouterState state) {
-            return const StartScreen();
-          },
-        ),
-        GoRoute(
-          path: 'questions',
-          builder: (BuildContext context, GoRouterState state) {
-            return const QuestionsScreen();
+        ...questions.asMap().entries.map(
+          (question) {
+            final int index = question.key;
+            return GoRoute(
+              path: 'questions/$index',
+              builder: (BuildContext context, GoRouterState state) {
+                return QuestionScreen(
+                  question: questions[index],
+                  currentQuestion: index,
+                  numberOfQuestions: questions.length,
+                );
+              },
+            );
           },
         ),
       ],
@@ -28,7 +32,7 @@ final GoRouter _router = GoRouter(
   ],
 );
 
-class QuizNavigator extends StatelessWidget{
+class QuizNavigator extends StatelessWidget {
   const QuizNavigator({super.key});
 
   @override
